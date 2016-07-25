@@ -2,7 +2,7 @@
 
 # 使い方
 
-PantomimeはAndroidのContentProviderに保存されているデータにアクセスしたデータをスキミングし保存します。
+PantomimeはAndroidのContentProviderに保存されているデータにアクセスしたデータをスキミングし保存します。  
 そして保存したデータをPantomimeモードで実行した時にそのスキミングデータをContentProviderの代わりに返却します。
 
 下記のようにrecordを呼び出すとContentProviderへのアクセス時にデータをスキミングします。
