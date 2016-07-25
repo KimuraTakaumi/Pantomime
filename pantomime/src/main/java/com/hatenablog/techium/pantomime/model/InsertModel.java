@@ -11,7 +11,7 @@ public class InsertModel extends FileModel {
 
     public static final String NAME = "insert";
 
-    private HashMap values;
+    private HashMap<String, Object> values;
 
     private String newUri;
 
@@ -25,8 +25,8 @@ public class InsertModel extends FileModel {
         return NAME;
     }
 
-    public HashMap getValues() {
-        return values;
+    public ContentValues getValues() {
+        return ContentValuesUtil.toContentValues(values);
     }
 
     public Uri getNewUri() {
@@ -37,7 +37,7 @@ public class InsertModel extends FileModel {
 
         private String uri;
 
-        private HashMap values;
+        private HashMap<String, Object> values;
 
         private String newUri;
 

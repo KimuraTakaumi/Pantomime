@@ -15,7 +15,7 @@ public class UpdateModel extends FileModel {
 
     private String[] selectionArgs;
 
-    private HashMap values;
+    private HashMap<String, Object> values;
 
     private int rows;
 
@@ -39,8 +39,8 @@ public class UpdateModel extends FileModel {
         return selectionArgs;
     }
 
-    public HashMap getValues() {
-        return values;
+    public ContentValues getValues() {
+        return ContentValuesUtil.toContentValues(values);
     }
 
     public int getRows() {
@@ -55,7 +55,7 @@ public class UpdateModel extends FileModel {
 
         private String[] selectionArgs;
 
-        private HashMap values;
+        private HashMap<String, Object> values;
 
         private int rows;
 

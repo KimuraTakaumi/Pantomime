@@ -42,4 +42,23 @@ public class ContentValuesUtil {
 
         return values;
     }
+
+    public static boolean compare(ContentValues src, ContentValues dest) {
+        if (src == null && dest == null) {
+            return true;
+        }
+
+        for (String str : src.keySet()) {
+            Object object = dest.get(str);
+
+            if (object == null) {
+                return false;
+            }
+
+            if (!src.get(str).equals(object)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

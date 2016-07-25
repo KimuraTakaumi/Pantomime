@@ -11,13 +11,14 @@ public class CursorUtil {
     public static ArrayList<HashMap<String, Object>> toHashMap(Cursor cursor) {
         String[] names = cursor.getColumnNames();
         ArrayList<HashMap<String, Object>> list = new ArrayList<>();
-
+        cursor.moveToFirst();
         for (int i = 0; i < cursor.getCount(); i++) {
             HashMap<String, Object> hashMap = new HashMap<>();
 
             for (String name : names) {
                 int index = cursor.getColumnIndex(name);
-                switch (cursor.getType(index)) {
+                int type = cursor.getType(index);
+                switch (type) {
                     case Cursor.FIELD_TYPE_BLOB:
                         hashMap.put(name, cursor.getBlob(index));
                         break;

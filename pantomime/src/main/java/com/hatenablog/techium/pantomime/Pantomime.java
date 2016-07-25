@@ -13,8 +13,11 @@ import com.hatenablog.techium.pantomime.model.GetTypeModel;
 import com.hatenablog.techium.pantomime.model.InsertModel;
 import com.hatenablog.techium.pantomime.model.QueryModel;
 import com.hatenablog.techium.pantomime.model.UpdateModel;
+import com.hatenablog.techium.pantomime.util.ContentValuesUtil;
+import com.hatenablog.techium.pantomime.util.StringUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Pantomime {
 
@@ -96,7 +99,8 @@ public class Pantomime {
             }
             case PANTOMIME: {
                 try {
-                    FileModel model = mFileManager.load(QueryModel.NAME, uri.toString());
+                    FileModel model = getMeetQuery(mFileManager.load(QueryModel.NAME, uri.toString()),
+                            uri, projection, selection, selectionArgs, sortOrder);
                     return ((QueryModel) model).getCursor();
                 } catch (ClassCastException e) {
                     e.printStackTrace();
@@ -133,7 +137,8 @@ public class Pantomime {
             }
             case PANTOMIME: {
                 try {
-                    FileModel model = mFileManager.load(GetTypeModel.NAME, uri.toString());
+                    FileModel model = getMeetGetType(mFileManager.load(GetTypeModel.NAME,
+                            uri.toString()), uri);
                     return ((GetTypeModel) model).getMimeType();
                 } catch (ClassCastException e) {
                     e.printStackTrace();
@@ -170,7 +175,8 @@ public class Pantomime {
             }
             case PANTOMIME: {
                 try {
-                    FileModel model = mFileManager.load(InsertModel.NAME, uri.toString());
+                    FileModel model = getMeetInsert(mFileManager.load(InsertModel.NAME,
+                            uri.toString()), uri, values);
                     return ((InsertModel) model).getNewUri();
                 } catch (ClassCastException e) {
                     e.printStackTrace();
@@ -208,7 +214,8 @@ public class Pantomime {
             }
             case PANTOMIME: {
                 try {
-                    FileModel model = mFileManager.load(DeleteModel.NAME, uri.toString());
+                    FileModel model = getMeetDelete(mFileManager.load(DeleteModel.NAME,
+                            uri.toString()), uri, selection, selectionArgs);
                     return ((DeleteModel) model).getRows();
                 } catch (ClassCastException e) {
                     e.printStackTrace();
@@ -247,7 +254,8 @@ public class Pantomime {
             }
             case PANTOMIME: {
                 try {
-                    FileModel model = mFileManager.load(UpdateModel.NAME, uri.toString());
+                    FileModel model = getMeetUpdate(mFileManager.load(UpdateModel.NAME,
+                            uri.toString()), uri, values, selection, selectionArgs);
                     return ((UpdateModel) model).getRows();
                 } catch (ClassCastException e) {
                     e.printStackTrace();
@@ -261,6 +269,120 @@ public class Pantomime {
                 break;
         }
         return 0;
+    }
+
+    private FileModel getMeetQuery(ArrayList<FileModel> models, Uri uri, String[] projection,
+                                   String selection, String[] selectionArgs, String sortOrder) {
+        for (FileModel model : models) {
+            QueryModel query = (QueryModel) model;
+
+            if (!StringUtil.compare(query.getUri(), uri.toString())) {
+                continue;
+            }
+
+            if (!StringUtil.compareArray(query.getProjection(), projection)) {
+                continue;
+            }
+
+            if (!StringUtil.compare(query.getSelection(), selection)) {
+                continue;
+            }
+
+            if (!StringUtil.compareArray(query.getSelectionArgs(), selectionArgs)) {
+                continue;
+            }
+
+            if (!StringUtil.compare(query.getSortOrder(), sortOrder)) {
+                continue;
+            }
+
+            return model;
+        }
+
+        return null;
+    }
+
+    private FileModel getMeetGetType(ArrayList<FileModel> models, Uri uri) {
+        for (FileModel model : models) {
+            GetTypeModel getType = (GetTypeModel) model;
+
+            if (!StringUtil.compare(getType.getUri(), uri.toString())) {
+                continue;
+            }
+
+            return model;
+        }
+
+        return null;
+    }
+
+    private FileModel getMeetInsert(ArrayList<FileModel> models, Uri uri, ContentValues values) {
+        for (FileModel model : models) {
+            InsertModel insert = (InsertModel) model;
+
+            if (!StringUtil.compare(insert.getUri(), uri.toString())) {
+                continue;
+            }
+
+            if (!ContentValuesUtil.compare(insert.getValues(), values)) {
+                continue;
+            }
+
+            return model;
+        }
+
+        return null;
+    }
+
+    private FileModel getMeetDelete(ArrayList<FileModel> models, Uri uri, String selection,
+                                    String[] selectionArgs) {
+        for (FileModel model : models) {
+            DeleteModel delete = (DeleteModel) model;
+
+            if (!StringUtil.compare(delete.getUri(), uri.toString())) {
+                continue;
+            }
+
+            if (!StringUtil.compare(delete.getSelection(), selection)) {
+                continue;
+            }
+
+            if (!StringUtil.compareArray(delete.getSelectionArgs(), selectionArgs)) {
+                continue;
+            }
+
+            return model;
+        }
+
+        return null;
+
+    }
+
+    private FileModel getMeetUpdate(ArrayList<FileModel> models, Uri uri, ContentValues values,
+                                    String selection, String[] selectionArgs) {
+        for (FileModel model : models) {
+            UpdateModel update = (UpdateModel) model;
+
+            if (!StringUtil.compare(update.getUri(), uri.toString())) {
+                continue;
+            }
+
+            if (!ContentValuesUtil.compare(update.getValues(), values)) {
+                continue;
+            }
+
+            if (!StringUtil.compare(update.getSelection(), selection)) {
+                continue;
+            }
+
+            if (!StringUtil.compareArray(update.getSelectionArgs(), selectionArgs)) {
+                continue;
+            }
+
+            return model;
+        }
+
+        return null;
     }
 
     public enum State {

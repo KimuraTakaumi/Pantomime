@@ -6,9 +6,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class FileManager {
 
@@ -21,6 +22,11 @@ public class FileManager {
     public void save(FileModel model) throws IOException {
         Gson gson = new Gson();
         File file = new File(mPath + "/" + model.getFileName());
+
+        if (file.exists()) {
+            return;
+        }
+
         FileWriter filewriter;
 
         filewriter = new FileWriter(file);
@@ -30,35 +36,50 @@ public class FileManager {
         pw.close();
     }
 
-    public FileModel load(String name, String uri) throws IOException {
+    public ArrayList<FileModel> load(final String name, String uri) throws IOException {
         Gson gson = new Gson();
-        String strUri = URLEncoder.encode(uri, "utf-8");
-        String fileName = name + "_" + strUri + ".json";
+        File directory = new File(mPath);
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String filename) {
+                return filename.startsWith(name);
+            }
+        };
 
-        FileInputStream input = new FileInputStream(mPath + "/" + fileName);
-        int size = input.available();
-        byte[] buffer = new byte[size];
-        input.read(buffer);
-        input.close();
+        File[] files = directory.listFiles(filter);
+        ArrayList<FileModel> models = new ArrayList<>();
+        for (File file : files) {
+            FileInputStream input = new FileInputStream(mPath + "/" + file.getName());
+            int size = input.available();
+            byte[] buffer = new byte[size];
+            input.read(buffer);
+            input.close();
 
-        // Json読み込み
-        String json = new String(buffer);
-
-        switch (name) {
-            case InsertModel.NAME:
-                return gson.fromJson(json, InsertModel.class);
-            case DeleteModel.NAME:
-                return gson.fromJson(json, DeleteModel.class);
-            case QueryModel.NAME:
-                return gson.fromJson(json, QueryModel.class);
-            case GetTypeModel.NAME:
-                return gson.fromJson(json, GetTypeModel.class);
-            case UpdateModel.NAME:
-                return gson.fromJson(json, UpdateModel.class);
-            default:
-                break;
+            // Json読み込み
+            String json = new String(buffer);
+            FileModel model;
+            switch (name) {
+                case InsertModel.NAME:
+                    model = gson.fromJson(json, InsertModel.class);
+                    break;
+                case DeleteModel.NAME:
+                    model = gson.fromJson(json, DeleteModel.class);
+                    break;
+                case QueryModel.NAME:
+                    model = gson.fromJson(json, QueryModel.class);
+                    break;
+                case GetTypeModel.NAME:
+                    model = gson.fromJson(json, GetTypeModel.class);
+                    break;
+                case UpdateModel.NAME:
+                    model = gson.fromJson(json, UpdateModel.class);
+                    break;
+                default:
+                    continue;
+            }
+            models.add(model);
         }
 
-        return null;
+        return models;
     }
 }

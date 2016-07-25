@@ -2,6 +2,7 @@ package com.hatenablog.techium.pantomime.model;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 
 public class FileModel {
 
@@ -19,7 +20,8 @@ public class FileModel {
 
     public String getFileName() throws UnsupportedEncodingException {
         String uri = URLEncoder.encode(getUri(), "utf-8");
-        return getName() + "_" + uri + ".json";
+        Date date = new Date();
+        return getName() + "_" + date.getTime() + uri + ".json";
     }
 
     public String getName() {
