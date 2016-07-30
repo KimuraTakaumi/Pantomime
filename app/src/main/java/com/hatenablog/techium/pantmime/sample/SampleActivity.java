@@ -45,13 +45,13 @@ public class SampleActivity extends AppCompatActivity {
         if (button != null) {
             button.setOnClickListener(mOnClickListener);
         }
-        Pantomime.getInstance().start(Environment.getExternalStorageDirectory().getPath());
+        Pantomime.getInstance().register(this).start(Environment.getExternalStorageDirectory().getPath());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Pantomime.getInstance().stop();
+        Pantomime.getInstance().unregister(this).stop();
     }
 
     @Override

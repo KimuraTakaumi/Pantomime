@@ -15,35 +15,21 @@
  */
 package com.hatenablog.techium.pantomime.util;
 
-public class StringUtil {
 
-    public static boolean compareArray(String[] src, String[] dest) {
-        if (src == null && dest == null) {
-            return true;
-        }
+import android.content.Context;
 
-        if (src.length != dest.length) {
-            return false;
-        }
+import java.lang.reflect.Field;
 
-        for (int i = 0; i < src.length; i++) {
-            if (!src[i].equals(dest[i])) {
-                return false;
-            }
+public class BuildConfigUtil {
+
+    public static boolean isDebug(Context context){
+        try {
+            Class<?> clazz = Class.forName(context.getPackageName() + ".BuildConfig");
+            Field field = clazz.getField("DEBUG");
+            return (Boolean) field.get(null);
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
         }
-        return true;
+        return false;
     }
-
-    public static boolean compare(String src, String dest) {
-        if (src == null && dest == null) {
-            return true;
-        }
-
-        if (!src.equals(dest)) {
-            return false;
-        }
-
-        return true;
-    }
-
 }
