@@ -8,19 +8,19 @@ PantomimeはAndroidのContentProviderに保存されているデータにアク�
 下記のようにrecordを呼び出すとContentProviderへのアクセス時にデータをスキミングします。
 
 ```
-Pantomime.getInstance().record("スキミングデータを保存するディレクトリパス");
+Pantomime.getInstance().register("Context").record("スキミングデータを保存するディレクトリパス");
 ```
 
 止めるには下記のようにstopを呼び出します。
 
 ```
-Pantomime.getInstance().stop();
+Pantomime.getInstance().register(this).stop();
 ```
 
 ContentProviderを利用しないでスキミングデータを利用する場合は次のようにします。
 
 ```
-Pantomime.getInstance().start("スキミングデータを保存するディレクトリパス");
+Pantomime.getInstance().register(this).start("スキミングデータを保存するディレクトリパス");
 ```
 
 ContentProviderへqueryでアクセスする場合は次のように実施します。
