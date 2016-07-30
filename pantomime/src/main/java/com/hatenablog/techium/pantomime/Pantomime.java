@@ -18,6 +18,7 @@ package com.hatenablog.techium.pantomime;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -28,6 +29,7 @@ import com.hatenablog.techium.pantomime.model.GetTypeModel;
 import com.hatenablog.techium.pantomime.model.InsertModel;
 import com.hatenablog.techium.pantomime.model.QueryModel;
 import com.hatenablog.techium.pantomime.model.UpdateModel;
+import com.hatenablog.techium.pantomime.util.BuildConfigUtil;
 import com.hatenablog.techium.pantomime.util.ContentValuesUtil;
 import com.hatenablog.techium.pantomime.util.StringUtil;
 
@@ -42,6 +44,8 @@ public class Pantomime {
 
     private FileManager mFileManager;
 
+    private boolean mIsDebug;
+
     private Pantomime() {
         mFileManager = new FileManager();
     }
@@ -53,11 +57,21 @@ public class Pantomime {
         return sInstance;
     }
 
+    public Pantomime register(Context context){
+        mIsDebug = BuildConfigUtil.isDebug(context);
+        return this;
+    }
+
+    public Pantomime unregister(Context content) {
+        mIsDebug = false;
+        return this;
+    }
+
     public Pantomime record(String path) {
         if (mState != State.DISABLE) {
             throw new IllegalStateException("Pantomime state run DISABLE state. This state is " + mState);
         }
-        if (BuildConfig.DEBUG) {
+        if (mIsDebug) {
             mState = State.RECORDING;
             mFileManager.setPath(path);
         }
@@ -68,7 +82,7 @@ public class Pantomime {
         if (mState != State.DISABLE) {
             throw new IllegalStateException("Pantomime state run DISABLE state. This state is " + mState);
         }
-        if (BuildConfig.DEBUG) {
+        if (mIsDebug) {
             mState = State.PANTOMIME;
             mFileManager.setPath(path);
         }
@@ -76,7 +90,7 @@ public class Pantomime {
     }
 
     public Pantomime stop() {
-        if (BuildConfig.DEBUG) {
+        if (mIsDebug) {
             if (mState == State.DISABLE) {
                 throw new IllegalStateException("Pantomime state run other DISABLE state. This state is " + mState);
             }
