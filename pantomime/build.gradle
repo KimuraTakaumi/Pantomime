@@ -1,12 +1,13 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion "23.0.3"
 
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0.1"
 
@@ -19,8 +20,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    publishNonDefault true
 }
 
 dependencies {
@@ -28,8 +27,16 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:appcompat-v7:24.1.1'
     testCompile 'junit:junit:4.12'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.guava:guava:19.0'
+}
+
+publish {
+    groupId = 'com.hatenablog.techium.pantomime'
+    artifactId = 'Pantomime'
+    publishVersion = '1.0.1'
+    desc = 'ContentProvider data clone. And, create mock.'
+    website = 'https://github.com/KimuraTakaumi/Pantomime'
 }
